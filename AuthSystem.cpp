@@ -25,47 +25,17 @@ private:
 
 public:
     AuthSystem() {
+        User user("user", "user123", "User");
+        User admin("admin", "admin123", "Admin");
+        users.push_back(user);
+        users.push_back(admin);
         void app();
         void runAdminMenu();
     }
 
-    void loadUsers() {
-        ifstream file(usersFile, ios::binary);
-        if (file.is_open()) {
-            User user;
-            while (file.read((char*)&user, sizeof(User))) {
-                users.push_back(user);
-            }
-            file.close();
-        }
-    }
-
-    void saveUsers() {
-        ofstream file(usersFile, ios::binary | ios::trunc);
-        if (file.is_open()) {
-            for (const auto& user : users) {
-                file.write((char*)&user, sizeof(User));
-            }
-            file.close();
-        }
-    }
-
-    void addUser() {
-        string username, password, role;
-        cout << "Enter username: ";
-        cin >> username;
-        cout << "Enter password: ";
-        cin >> password;
-        cout << "Enter role (admin/user): ";
-        cin >> role;
-
-        users.push_back(User(username, password, role));
-        saveUsers();
-        cout << "User added successfully!" << endl;
-    }
-
     bool authenticate(const string& username, const string& password, User& authenticatedUser) {
-        for (const auto& user : users) {
+        for (User user : users)
+        {
             if (user.getUsername() == username && user.getPassword() == password) {
                 authenticatedUser = user;
                 return true;
@@ -83,8 +53,8 @@ public:
 
         User authenticatedUser;
         if (authenticate(username, password, authenticatedUser)) {
-            cout << "Login successful! Role: " << authenticatedUser.getRole() << endl;
-            if (authenticatedUser.getRole() == "admin") {
+            cout << "Login successful!" << authenticatedUser.getRole() << endl;
+            if (authenticatedUser.getRole() == "Admin") {
                 adminMenu();
             } else {
                 userMenu();
@@ -99,11 +69,10 @@ public:
         cin >> username;
         cout << "Enter password: ";
         cin >> password;
-        cout << "Enter role (admin/user): ";
+        cout << "Enter role (Admin/User): ";
         cin >> role;
 
         users.push_back(User(username, password, role));
-        saveUsers();
         cout << "User added successfully!" << endl;
     }
 
@@ -181,13 +150,10 @@ public:
             case 1:
                 login();
                 break;
-            case 2:
-                regis();
-                break;
             default:
                 cout << "Exiting the program. Goodbye." << endl;
             } 
-        } while (choice != 3);
+        } while (choice != 2);
     }
     
 };
