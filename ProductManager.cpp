@@ -52,6 +52,7 @@ public:
         std::cout << "\nUpdated successfully.\n";
     }
     void deleteProduct(int id){
+        if (!confirmation()) {return;} 
         auto it = std::remove_if(products.begin(), products.end(),[id](Product* product){
             if(product->getId() == id){
                 delete product;
@@ -71,9 +72,30 @@ public:
             throw std::invalid_argument("No product available\n");
             return;
         }
-         displayProduct();
+        displayProduct();
         for(const auto& product :products){
             product->displayname();
+        }
+    }
+
+    bool confirmation() {
+        string confirm;
+        while (true)
+        {
+            cout <<"Are you Sure? <yes/no>: ";
+            std::getline(std::cin, confirm);
+            if (confirm =="no" || confirm == "n")
+            {
+                return false;
+            }
+            else if (confirm == "yes" || confirm == "y")
+            {
+                return true;
+            }
+            else
+            {
+                cout << "Invalid input. Please enter 'yes' or 'no'.\n";
+            }
         }
     }
 };
